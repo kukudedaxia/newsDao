@@ -10,6 +10,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  font-size: 16px;
 }
 
 label {
@@ -23,6 +24,8 @@ html {
 
 #app {
   height: 100%;
+  background: var(--bg-2);
+ 
 }
 
 *,
@@ -63,3 +66,146 @@ div:focus {
 .app-container {
   padding: 20px;
 }
+
+
+ol,
+ul {
+  list-style: none;
+}
+a,
+abbr,
+address,
+article,
+aside,
+audio,
+b,
+big,
+blockquote,
+body,
+caption,
+center,
+cite,
+code,
+dd,
+del,
+details,
+dfn,
+dl,
+dt,
+em,
+embed,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+html,
+i,
+iframe,
+img,
+ins,
+label,
+legend,
+li,
+mark,
+menu,
+nav,
+ol,
+output,
+p,
+pre,
+q,
+ruby,
+s,
+samp,
+section,
+small,
+strike,
+strong,
+sub,
+summary,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+time,
+tr,
+u,
+ul,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+
+// loading
+@-webkit-keyframes woo-spinner-_-rotate {
+  to {
+    -webkit-transform: translateZ(0);
+    -webkit-transform: rotate(1turn);
+    transform: translateZ(0);
+    transform: rotate(1turn);
+  }
+}
+@keyframes woo-spinner-_-rotate {
+  to {
+    -webkit-transform: translateZ(0);
+    -webkit-transform: rotate(1turn);
+    transform: translateZ(0);
+    transform: rotate(1turn);
+  }
+}
+@keyframes woo-spinner-_-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -30px;
+  }
+  to {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -120px;
+  }
+}
+
+
+/** 滚动条 **/
+::-webkit-scrollbar {
+  width: 4px;
+  border-radius: 50px;
+} /* 这是针对缺省样式 (必须的) */
+::-webkit-scrollbar-track {
+  background-color: transparent;
+} /* 滚动条的滑轨背景颜色 */
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+} /* 滑块颜色 */
+
+::-webkit-scrollbar-button {
+  background-color: transparent;
+} /* 滑轨两头的监听按钮颜色 */
+
+::-webkit-scrollbar-corner {
+  background-color: #f9f9f9;
+} /* 横向滚动条和纵向滚动条相交处尖角的颜色 */

@@ -5,6 +5,7 @@
     transition: margin-left .28s;
     margin-left: $sideBarWidth;
     position: relative;
+    background: var(--bg-2);
   }
 
   .sidebar-container {
@@ -93,11 +94,11 @@
 
   .hideSidebar {
     .sidebar-container {
-      width: 54px !important;
+      width: 60px !important;
     }
 
     .main-container {
-      margin-left: 54px;
+      margin-left: 60px;
     }
 
     .submenu-title-noDropdown {
@@ -108,7 +109,7 @@
         padding: 0 !important;
 
         .svg-icon {
-          margin-left: 20px;
+          margin-left: 16px;
         }
 
         .sub-el-icon {
@@ -222,5 +223,11 @@
       background: #99a9bf;
       border-radius: 20px;
     }
+  }
+}
+
+.hideSidebar  {
+  .devider {
+    display: none !important;
   }
 }

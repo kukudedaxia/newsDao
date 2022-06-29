@@ -29,11 +29,16 @@ export default {
   methods: {
     getBreadcrumb() {
       // only show routes with meta.title
+
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title)
       const first = matched[0]
 
+      // 解决三级路由 没有面包屑
+      if (first.meta && first.meta.dashboard) {
+        matched = [{ path: first.meta.dashboard.path, meta: { title: first.meta.dashboard.title }}].concat(matched)
+      }
       if (!this.isDashboard(first)) {
-        matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
+        matched = [{ path: '/', meta: { title: 'NewsDao' }}].concat(matched)
       }
 
       this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)
@@ -43,7 +48,7 @@ export default {
       if (!name) {
         return false
       }
-      return name.trim().toLocaleLowerCase() === 'Dashboard'.toLocaleLowerCase()
+      return name.trim().toLocaleLowerCase() === 'home'.toLocaleLowerCase()
     },
     pathCompile(path) {
       // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
