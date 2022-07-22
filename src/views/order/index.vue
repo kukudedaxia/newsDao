@@ -3,6 +3,7 @@
     <div class="middle">
       <h3 class="h3">群管理</h3>
       <el-table
+        v-loading="loading"
         :data="list"
         style="width: 100%"
         max-height="500"
@@ -15,10 +16,19 @@
         <el-table-column
           label="群名数量"
           sortable
-          prop="number"
+          prop="member_count"
           width="120"
         />
         <el-table-column
+          label="描述"
+          prop="description"
+        />
+        <el-table-column
+          label="receiver"
+          prop="receiver"
+        />
+
+        <!-- <el-table-column
           label="身份"
           :filters="[{ text: '创建者', value: 'owner' }, { text: '管理员', value: 'administrator' },{ text: '普通群员', value: 'masses' }]"
           :filter-method="filterTag"
@@ -32,35 +42,45 @@
               </div>
             </el-popover>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           label="机器人"
         >
           <template slot-scope="scope">
-            <div class="avator">
+            <!-- <div class="avator">
               <img :src="scope.row.robot.img">
               <span>{{ scope.row.robot.name }}</span>
-            </div>
+            </div> -->
           </template>
         </el-table-column>
         <el-table-column
           label="channel"
         ><template slot-scope="scope">
-          <el-popover v-for="(item, index) in scope.row.channel" :key="index" trigger="hover" placement="top">
-            <p>channel的描述</p>
-            <el-tag slot="reference" class="tag-item" size="small" effect="plain">{{ item.name }}</el-tag>
-
-          </el-popover>
+          <div v-if="scope.row.channels">
+            <el-popover v-for="(item, index) in scope.row.channels.data.slice(0,2)" :key="index" trigger="hover" placement="top">
+              <p>{{ item.name }}</p>
+              <el-tag slot="reference" class="tag-item" size="small" effect="plain">{{ item.name }}</el-tag>
+            </el-popover>
+            <el-popover v-if="scope.row.channels.data.length>2" trigger="hover" placement="top">
+              <p>访问更多数据请前往详情页</p>
+              <el-tag slot="reference" class="tag-item" size="small" effect="plain">More</el-tag>
+            </el-popover>
+          </div>
         </template>
         </el-table-column>
         <el-table-column
+          label="创建时间"
+          prop="created_at"
+        />
+        <el-table-column
           align="right"
         >
-          <template slot="header">
+          <template slot="header" slot-scope="scope">
             <el-input
               v-model="search"
               size="small"
               placeholder="输入关键字搜索"
+              @keyup.enter.native="Search"
             >
               <i slot="prefix" class="el-input__icon el-icon-search" />
             </el-input>
@@ -77,7 +97,7 @@
         <el-pagination
           layout="prev, pager, next, jumper, total"
           :current-page="currentPage"
-          :page-size="pageNumer"
+          :page-size="pageSize"
           :total="total"
           @current-change="handleCurrentChange"
         />
@@ -95,7 +115,8 @@ export default {
       total: 0,
       search: '',
       currentPage: 1,
-      pageNumer: 30
+      pageSize: 10,
+      loading: false
     }
   },
   created() {
@@ -103,14 +124,27 @@ export default {
   },
   methods: {
     getList() {
+      this.loading = true
       request({
-        url: '/vue-admin-template/order/list',
-        method: 'get'
+        url: `/backend/me/receivers`,
+        method: 'get',
+        params: {
+          page: this.currentPage,
+          perPage: this.pageSize,
+          keywords: this.search
+        }
       }).then(res => {
         console.log(res, 'res')
-        this.list = res.data.items
-        this.total = res.data.total
+        this.list = res.data
+        this.total = res.meta.pagination.total
+        this.loading = false
       })
+    },
+    Search() {
+      console.log('开始搜索')
+      this.currentPage = 1
+
+      this.getList()
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
@@ -118,7 +152,7 @@ export default {
     handleEdit(oindex, row) {
       console.log(oindex, row)
       this.$router.push({
-        path: `/order/list/${oindex}`,
+        path: `/order/list/${row.id}`,
         query: {
           hideHeader: true
         }

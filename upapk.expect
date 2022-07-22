@@ -1,0 +1,57 @@
+#!/usr/bin/expect
+set timeout 30
+
+set src_file [lindex $argv 0]
+set host [lindex $argv 1]
+set username [lindex $argv 2]
+set password [lindex $argv 3]
+set envs [lindex $argv 4]
+
+#区分线上与测试目录环境
+if {$envs == "tests"} {
+  set dest_path /server/data/fe/manage
+} else {
+  set dest_path /data/www/weapon-master/homepage
+}
+
+set remote_tmp_path /home/$username
+set file_name [exec basename $src_file]
+
+#echo ${file_name} "filename"
+
+set dest_file $dest_path/$file_name
+set remote_tmp_file $remote_tmp_path/$file_name
+
+spawn scp $src_file $username@$host:/home/$username
+expect {
+ "(yes/no"
+  {
+    send "yes\n"
+    expect "*assword:" { send "*$password\n"}
+  }
+ "*assword:"
+  {
+    send "*$password\n"
+  }
+}
+expect 100%
+expect eof
+spawn ssh $username@$host
+expect {
+ "*assword:"
+  {
+    send "*$password\n"
+  }
+}
+expect "#"
+send "sudo -s\r"
+send "rm -rf $dest_path\r"
+send "mkdir $dest_path\r"
+send "mv $remote_tmp_file $dest_path\r"
+send "cd $dest_path\r"
+send "tar -xvf ./$file_name\r"
+send "rm -f $dest_file\r"
+send "exit\r"
+send "exit\r"
+expect eof
+#interact

@@ -71,7 +71,7 @@ export const constantRoutes = [
       path: 'docs',
       name: 'docs',
       component: () => import('@/views/example/index'),
-      meta: { title: '使用文档', icon: 'docs' }
+      meta: { title: '使用文档', icon: 'help' }
     }]
   },
 
@@ -86,18 +86,54 @@ export const constantRoutes = [
         path: 'list',
         name: 'order',
         component: () => import('@/views/order/index'),
-        meta: { title: '我的订阅', icon: 'order' }
+        meta: { title: '群管理', icon: 'peoples' }
       }, {
         path: 'list/:id',
         hidden: true,
         name: 'detail',
         component: () => import('@/views/order/detail'),
-        meta: { title: '订阅', icon: 'order', dashboard: {
+        meta: { title: '编辑群', icon: 'peoples', dashboard: {
           path: '/order/list',
-          title: '我的订阅'
+          title: '群管理'
         }}
       }
     ]
+  },
+  {
+    path: '/channel',
+    component: Layout,
+    redirect: '/channel/list',
+    devider: true,
+    deviderText: '频道',
+    children: [
+      {
+        path: 'list',
+        name: 'channel',
+        component: () => import('@/views/channel/index'),
+        meta: { title: '定制频道', icon: 'order' }
+      }, {
+        path: 'list/:id',
+        hidden: true,
+        name: 'detail',
+        component: () => import('@/views/channel/detail'),
+        meta: { title: '编辑频道', icon: 'order', dashboard: {
+          path: '/channel/list',
+          title: '定制频道'
+        }}
+      }
+    ]
+  },
+  {
+    path: '/source',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'Source',
+    children: [{
+      path: 'source',
+      name: 'source',
+      component: () => import('@/views/origin/index'),
+      meta: { title: '源管理', icon: 'docs' }
+    }]
   },
   {
     path: '/person',
@@ -110,17 +146,6 @@ export const constantRoutes = [
         name: 'order',
         component: () => import('@/views/person/index'),
         meta: { title: '个人中心', icon: 'user' }
-      }
-    ]
-  },
-
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'Custom Channel', icon: 'link' }
       }
     ]
   },

@@ -14,7 +14,7 @@ const state = getDefaultState()
 
 const mutations = {
   RESET_STATE: (state) => {
-    Object.assign(state, getDefaultState())
+    Object.assign(state, getDefaultState()) // 重制用户信息
   },
   SET_TOKEN: (state, token) => {
     state.token = token
@@ -30,12 +30,15 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    console.log(userInfo, 'userInfo')
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+      login(userInfo).then(response => {
+        console.log(response, 'response')
+        // const { data } = response
+        commit('SET_TOKEN', response.access_token)
+        commit('SET_NAME', userInfo.email)
+        setToken(response.access_token)
+        setToken(userInfo.email, 'name')
         resolve()
       }).catch(error => {
         reject(error)
@@ -69,7 +72,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         removeToken() // must remove  token  first
-        resetRouter()
+        removeToken('name')
+        resetRouter() // ????
         commit('RESET_STATE')
         resolve()
       }).catch(error => {
@@ -78,7 +82,7 @@ const actions = {
     })
   },
 
-  // remove token
+  // remove token 清楚登录状态
   resetToken({ commit }) {
     return new Promise(resolve => {
       removeToken() // must remove  token  first

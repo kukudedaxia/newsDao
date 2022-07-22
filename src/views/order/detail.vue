@@ -3,21 +3,20 @@
     <div class="top">
       <div class="card">
         <el-descriptions title="群信息" border :column="2">
-          <el-descriptions-item label="wx_id">{{ info.id }}</el-descriptions-item>
-          <el-descriptions-item label="名称">{{ info.name }}</el-descriptions-item>
-          <el-descriptions-item label="身份">{{ info.status }}</el-descriptions-item>
-          <el-descriptions-item label="成员">{{ info.number }}</el-descriptions-item>
-          <el-descriptions-item label="机器人">
+          <el-descriptions-item label="索引">{{ info.id }}</el-descriptions-item>
+          <el-descriptions-item label="群名称">{{ info.name }}</el-descriptions-item>
+          <el-descriptions-item label="创建时间">{{ info.created_at }}</el-descriptions-item>
+          <el-descriptions-item label="描述">{{ info.description }}</el-descriptions-item>
+          <el-descriptions-item label="群成员">{{ info.member_count }}</el-descriptions-item>
+          <el-descriptions-item label="receiver">{{ info.receiver }}</el-descriptions-item>
+          <!-- <el-descriptions-item label="机器人">
 
             <div class="avator">
               <img :src="info.robot.img">
               <span>{{ info.robot.name }}</span>
             </div>
 
-          </el-descriptions-item>
-          <el-descriptions-item label="channels">
-            <el-tag v-for="(item, index) in info.channel" :key="index" class="tag-item" size="small" effect="plain">{{ item.name }}</el-tag>
-          </el-descriptions-item>
+          </el-descriptions-item> -->
         </el-descriptions>
       </div>
     </div>
@@ -28,8 +27,8 @@
           v-model="value"
           style="text-align: left; display: inline-block"
           filterable
-          :left-default-checked="[2, 3]"
-          :right-default-checked="[1]"
+          :left-default-checked="leftcheck"
+          :right-default-checked="[6]"
           :titles="['未订阅列表', '已订阅列表']"
           :button-texts="['取消', '订阅']"
           :format="{
@@ -39,66 +38,36 @@
           :data="channels"
           @change="handleChange"
         >
-          <span slot-scope="{ option }">{{ option.key }} - {{ option.label }}</span>
+          <span slot-scope="{ option }">{{ option.name }}</span>
           <!-- <el-button slot="left-footer" class="transfer-footer" size="small">操作</el-button>
           <el-button slot="right-footer" class="transfer-footer" size="small">操作</el-button> -->
         </el-transfer>
-        <el-button type="primary" class="save">保存</el-button>
+        <el-button type="primary" class="save" :loading="saveLoding" @click="save">保存</el-button>
       </div>
+      <div class="info" />
     </div>
   </div>
 </template>
 <script>
+import request from '@/utils/request'
 export default {
   name: 'OrderDetail',
   data() {
     return {
-
       title: '123',
       info: {
-        'id': '640000200811136821',
-        'name': 'f)mbr24wCoEeyZ',
-        'status': 'administrator',
-        'number': 58,
-        'robot': {
-          'name': '[i6mz0j',
-          'img': 'https://img.bee-cdn.com/orj360/3b9ae236lz1h39650jalvj20n00n07wh.jpg'
-        },
-        'channel': [
-          {
-            'name': 'Layer'
-          },
-          {
-            'name': 'POS'
-          },
-          {
-            'name': 'POS'
-          },
-          {
-            'name': 'Layer'
-          },
-          {
-            'name': 'POW'
-          },
-          {
-            'name': 'Defi'
-          },
-          {
-            'name': 'NFT'
-          },
-          {
-            'name': 'gameFi'
-          },
-          {
-            'name': 'POW'
-          },
-          {
-            'name': 'Oraz'
-          }
-        ]
+
       },
       channels: [],
-      value: []
+      value: [],
+      leftcheck: [],
+      rightcheck: ['6'],
+      saveLoding: false
+    }
+  },
+  computed: {
+    id() {
+      return this.$route.params.id
     }
   },
   created() {
@@ -107,20 +76,53 @@ export default {
   },
   methods: {
     getInfo() {
-
+      this.loading = true
+      request({
+        url: `/backend/receivers/${this.id}`,
+        method: 'get'
+      }).then(res => {
+        console.log(res, '群姑那里list')
+        this.info = res.data
+        this.value = res.data.channels.data.map(item => item.id)
+      })
     },
     getChannel() {
-      const data = []
-      for (let i = 1; i <= 15; i++) {
-        data.push({
-          key: i,
-          label: `备选项 ${i}`
+      request({
+        url: `/backend/channels`,
+        method: 'get',
+        params: {
+          page: 1,
+          perPage: 1000
+        }
+      }).then(res => {
+        console.log(res, 'res')
+        this.channels = res.data.map(item => {
+          item.key = item.id
+          item.lable = item.name
+          return item
         })
-      }
-      this.channels = data
+      })
     },
     handleChange(value, direction, movedKeys) {
       console.log(value, direction, movedKeys)
+    },
+    save() {
+      this.saveLoding = true
+      request({
+        url: `/backend/receivers/${this.id}/subscribe`,
+        method: 'post',
+        data: {
+          channelIds: this.value
+        }
+      }).then(res => {
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        })
+        this.saveLoding = false
+      }).catch(() => {
+        this.saveLoding = false
+      })
     }
   }
 }

@@ -5,6 +5,7 @@
   "author": "Pan <panfree23@gmail.com>",
   "scripts": {
     "dev": "vue-cli-service serve",
+    "build": "vue-cli-service build",
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",
     "preview": "node build/index.js --preview",
@@ -19,6 +20,7 @@
     "css-vars-ponyfill": "^2.4.7",
     "echarts": "^5.3.3",
     "echarts-wordcloud": "^2.0.0",
+    "el-table-infinite-scroll": "^2.0.0",
     "element-ui": "^2.15.7",
     "js-cookie": "2.2.0",
     "normalize.css": "7.0.0",

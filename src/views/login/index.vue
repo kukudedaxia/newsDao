@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">Login NewsDao</h3>
       </div>
 
       <el-form-item prop="username">
@@ -11,17 +11,18 @@
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
+          ref="email"
+          v-model="loginForm.email"
           placeholder="Username"
-          name="username"
+          name="email"
           type="text"
           tabindex="1"
           auto-complete="on"
+          :disabled="step == 2"
         />
       </el-form-item>
 
-      <el-form-item prop="password">
+      <el-form-item v-show="step == 2" prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
@@ -41,11 +42,40 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-form-item v-show="step == 2 && !register" class="input-box flex-align verfiy" prop="verification_code">
+        <el-input
+          v-model="loginForm.verification_code"
+          placeholder="请输入验证码"
+          type="text"
+          auto-complete="on"
+        />
+        <template v-if="!codeLoading">
+          <p v-if="!codeTimes" :class="['send-times']" @click=" sendCode()">
+            {{ sendCodeText }}
+          </p>
+          <p v-else :class="['times', 'no-flip-over']">{{ codeTimes }}s</p>
+        </template>
+        <loading v-else :is-complete="false" class="loading-icon" />
+      </el-form-item>
+
+      <el-form-item v-show="step == 2 && !register" prop="code">
+        <el-input
+          ref="code"
+          v-model="loginForm.code"
+          placeholder="请输入Wx_code"
+          name="code"
+          type="text"
+          tabindex="1"
+          auto-complete="on"
+        />
+      </el-form-item>
+
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ step == 1 ? 'NEXT' : "LOGIN" }}</el-button>
+      <el-button v-if="step == 2" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="back">返回账号输入</el-button>
 
       <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
+        <span v-if="step == 1" style="margin-right:20px;">step1: 请选输入邮箱账号</span>
+        <!-- <span></span> -->
       </div>
 
     </el-form>
@@ -54,36 +84,59 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import request from '@/utils/request'
+import Loading from '@/components/Loading'
+
+const validateUsername = (rule, value, callback) => {
+  if (!validUsername(value)) {
+    callback(new Error('Please enter the correct user name'))
+  } else {
+    callback()
+  }
+}
+const validatePassword = (rule, value, callback) => {
+  if (value.length < 6) {
+    callback(new Error('The password can not be less than 6 digits'))
+  } else {
+    callback()
+  }
+}
 
 export default {
   name: 'Login',
+  components: {
+    Loading
+  },
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
-    }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        email: 'lengh123456@gmail.com',
+        password: '',
+        code: '',
+        verification_code: '',
+        verification_key: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        email: [{ required: true, trigger: 'blur', validator: validateUsername }]
+        // password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      step: 1, // 第一步先验证邮箱 第二部才输入密码
+      register: false,
+      codeTimes: '', // 倒计时计数
+      codeLoading: false, // 发送验证码loading
+      errorMsg: '',
+      codeCount: 0
+    }
+  },
+  computed: {
+    sendCodeText() {
+      if (this.codeTimes === '') {
+        return '发送'
+      }
+      return '重发'
     }
   },
   watch: {
@@ -105,21 +158,92 @@ export default {
         this.$refs.password.focus()
       })
     },
+    back() {
+      this.loginForm = {
+        email: this.loginForm.email,
+        password: '',
+        code: '',
+        verification_code: '',
+        verification_key: ''
+      }
+      this.step = 1
+    },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
+      if (this.step === 1) {
+        this.$refs.loginForm.validate(valid => {
+          console.log(valid, 'valid')
+          request({
+            url: `/checkEmail`,
+            method: 'post',
+            data: {
+              email: this.loginForm.email
+            }
+          }).then(res => {
+            console.log(res, '11')
+            if (res.code === 200) {
+              this.register = true
+            } else {
+              this.register = false
+            }
+            this.step = 2
+            this.loginRules = {
+              email: [{ required: true, trigger: 'blur', validator: validateUsername }],
+              password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+            }
+          }).catch((err) => {
+            this.$message({
+              type: 'info',
+              message: err
+            })
           })
-        } else {
-          console.log('error submit!!')
-          return false
+        })
+      } else {
+        this.$refs.loginForm.validate(valid => {
+          console.log(valid, 'valid')
+          if (valid) {
+            this.loading = true
+            this.$store.dispatch('user/login', this.loginForm).then(() => {
+              this.$router.push({ path: this.redirect || '/' })
+              this.loading = false
+            }).catch(() => {
+              this.loading = false
+            })
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      }
+    },
+    sendCode() {
+      this.codeLoading = true
+      request({
+        url: `/verificationCodes`,
+        method: 'post',
+        data: {
+          email: this.loginForm.email
         }
+      }).then(res => {
+        this.codeLoading = false
+        this.loginForm.verification_key = res.key
+        this.countDown()
       })
+    },
+    // 倒计时
+    countDown() {
+      this.codeCount++
+      this.codeTimes = 60
+      let times = null
+      // eslint-disable-next-line no-undef
+      if (!times) {
+        times = setInterval(() => {
+          this.codeTimes--
+          if (this.codeTimes <= 0) {
+            clearInterval(times)
+            times = null
+          }
+        }, 1000)
+      }
     }
   }
 }
@@ -233,5 +357,35 @@ $light_gray:#eee;
     cursor: pointer;
     user-select: none;
   }
+}
+
+.send-times {
+    font-size: 16px;
+    color: #2196f3;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.times {
+   margin-left: 10px;
+   color: #03a9f4;
+}
+</style>
+<style lang="scss">
+.el-button+.el-button {
+  margin-left: 0;
+}
+.el-input.is-disabled .el-input__inner {
+  background: transparent;
+}
+.verfiy {
+  .el-form-item__content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+.svg-icon {
+  vertical-align: sub;
 }
 </style>

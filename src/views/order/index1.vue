@@ -49,6 +49,12 @@
 
 <script>
 export default {
+  props: {
+    chose: {
+      type: Array,
+      default: () => []
+    }
+  },
   data() {
     return {
       form: {
