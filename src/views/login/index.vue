@@ -1,12 +1,12 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm" :rules="step == 1 ? loginRules : loginRules1" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
         <h3 class="title">Login NewsDao</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="email">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
@@ -75,7 +75,7 @@
 
       <div class="tips">
         <span v-if="step == 1" style="margin-right:20px;">step1: 请选输入邮箱账号</span>
-        <!-- <span></span> -->
+        <span v-if="step == 2 && register == false" style="margin-right:20px;">step2: 登录即为注册成功</span>
       </div>
 
     </el-form>
@@ -87,27 +87,27 @@ import { validUsername } from '@/utils/validate'
 import request from '@/utils/request'
 import Loading from '@/components/Loading'
 
-const validateUsername = (rule, value, callback) => {
-  if (!validUsername(value)) {
-    callback(new Error('Please enter the correct user name'))
-  } else {
-    callback()
-  }
-}
-const validatePassword = (rule, value, callback) => {
-  if (value.length < 6) {
-    callback(new Error('The password can not be less than 6 digits'))
-  } else {
-    callback()
-  }
-}
-
 export default {
   name: 'Login',
   components: {
     Loading
   },
   data() {
+    const validateUsername = (rule, value, callback) => {
+      console.log(value, validUsername(value))
+      if (!validUsername(value)) {
+        callback(new Error('Please enter the correct user name'))
+      } else {
+        callback()
+      }
+    }
+    const validatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error('The password can not be less than 6 digits'))
+      } else {
+        callback()
+      }
+    }
     return {
       loginForm: {
         email: 'lengh123456@gmail.com',
@@ -118,7 +118,10 @@ export default {
       },
       loginRules: {
         email: [{ required: true, trigger: 'blur', validator: validateUsername }]
-        // password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+      },
+      loginRules1: {
+        email: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       loading: false,
       passwordType: 'password',
@@ -171,31 +174,34 @@ export default {
     handleLogin() {
       if (this.step === 1) {
         this.$refs.loginForm.validate(valid => {
-          console.log(valid, 'valid')
-          request({
-            url: `/checkEmail`,
-            method: 'post',
-            data: {
-              email: this.loginForm.email
-            }
-          }).then(res => {
-            console.log(res, '11')
-            if (res.code === 200) {
-              this.register = true
-            } else {
-              this.register = false
-            }
-            this.step = 2
-            this.loginRules = {
-              email: [{ required: true, trigger: 'blur', validator: validateUsername }],
-              password: [{ required: true, trigger: 'blur', validator: validatePassword }]
-            }
-          }).catch((err) => {
-            this.$message({
-              type: 'info',
-              message: err
+          if (valid) {
+            request({
+              url: `/checkEmail`,
+              method: 'post',
+              data: {
+                email: this.loginForm.email
+              }
+            }).then(res => {
+              console.log(res, '11')
+              if (res.code === 200) {
+                this.register = true
+              } else {
+                this.register = false
+              }
+              this.step = 2
+              this.$nextTick(() => {
+                this.$refs.loginForm.clearValidate()
+              })
+            }).catch((err) => {
+              this.$message({
+                type: 'info',
+                message: err
+              })
             })
-          })
+          } else {
+            console.log('error submit!!')
+            return false
+          }
         })
       } else {
         this.$refs.loginForm.validate(valid => {

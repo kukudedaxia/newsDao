@@ -1,5 +1,5 @@
 <template>
-  <div v-wechat-title="title" class="detail">
+  <div v-wechat-title="title" v-loading="loading1 && loading2" class="detail">
     <div class="top">
       <div class="card">
         <el-descriptions title="群信息" border :column="2">
@@ -62,7 +62,9 @@ export default {
       value: [],
       leftcheck: [],
       rightcheck: ['6'],
-      saveLoding: false
+      saveLoding: false,
+      loading1: true,
+      loading2: true
     }
   },
   computed: {
@@ -84,6 +86,7 @@ export default {
         console.log(res, '群姑那里list')
         this.info = res.data
         this.value = res.data.channels.data.map(item => item.id)
+        this.loading1 = false
       })
     },
     getChannel() {
@@ -101,6 +104,7 @@ export default {
           item.lable = item.name
           return item
         })
+        this.loading2 = false
       })
     },
     handleChange(value, direction, movedKeys) {

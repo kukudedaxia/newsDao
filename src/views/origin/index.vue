@@ -44,7 +44,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="用户"
+          label="用户名"
         >
           <template slot-scope="scope">
             <div class="avator">

@@ -152,7 +152,7 @@ export default {
     handleEdit(oindex, row) {
       console.log(oindex, row)
       this.$router.push({
-        path: `/order/list/${row.id}`,
+        path: `order/list/${row.id}`,
         query: {
           hideHeader: true
         }

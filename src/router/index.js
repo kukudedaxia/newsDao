@@ -50,45 +50,32 @@ export const constantRoutes = [
     }
   },
 
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   redirect: 'noRedirect',
+  //   children: [{
+  //     path: '',
+  //     name: 'home',
+  //     component: () => import('@/views/home/index'),
+  //     meta: { title: '仪表盘', icon: 'progress' }
+  //   }]
+  // },
+
   {
     path: '/',
     component: Layout,
-    redirect: 'noRedirect',
-    children: [{
-      path: '',
-      name: 'home',
-      component: () => import('@/views/home/index'),
-      meta: { title: '仪表盘', icon: 'progress' }
-    }]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'Example',
-    children: [{
-      path: 'docs',
-      name: 'docs',
-      component: () => import('@/views/example/index'),
-      meta: { title: '使用文档', icon: 'help' }
-    }]
-  },
-
-  {
-    path: '/order',
-    component: Layout,
-    redirect: '/order/list',
+    redirect: '/order',
     devider: true,
     deviderText: '订阅',
     children: [
       {
-        path: 'list',
+        path: 'order',
         name: 'order',
         component: () => import('@/views/order/index'),
         meta: { title: '群管理', icon: 'peoples' }
       }, {
-        path: 'list/:id',
+        path: 'order/list/:id',
         hidden: true,
         name: 'detail',
         component: () => import('@/views/order/detail'),
@@ -129,23 +116,54 @@ export const constantRoutes = [
     redirect: 'noRedirect',
     name: 'Source',
     children: [{
-      path: 'source',
+      path: 'list',
       name: 'source',
       component: () => import('@/views/origin/index'),
       meta: { title: '源管理', icon: 'docs' }
     }]
   },
+  // {
+  //   path: '/person',
+  //   component: Layout,
+  //   devider: true,
+  //   deviderText: '用户',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'order',
+  //       component: () => import('@/views/person/index'),
+  //       meta: { title: '个人中心', icon: 'user' }
+  //     }
+  //   ]
+  // },
+
   {
-    path: '/person',
+    path: '/example',
+    redirect: 'noRedirect',
+    name: 'Example',
     component: Layout,
     devider: true,
-    deviderText: '用户',
+    deviderText: '帮助',
+    children: [{
+      path: 'docs',
+      name: 'docs',
+      meta: { title: '使用文档', icon: 'help' },
+      component: () => import('@/views/example/index')
+    }]
+  },
+  {
+    path: '/example/demo',
+    component: () => import('@/views/example/index'),
+    meta: { title: '使用文档', icon: 'help' },
+    hidden: true
+  },
+  {
+    path: 'external-link',
+    component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'order',
-        component: () => import('@/views/person/index'),
-        meta: { title: '个人中心', icon: 'user' }
+        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+        meta: { title: '定制化源', icon: 'link' }
       }
     ]
   },
