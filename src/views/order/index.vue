@@ -14,7 +14,7 @@
           width="140"
         />
         <el-table-column
-          label="群名数量"
+          label="群成员数量"
           sortable
           prop="member_count"
           width="120"

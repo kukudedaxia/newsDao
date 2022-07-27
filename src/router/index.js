@@ -162,7 +162,7 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+        path: 'https://jinshuju.net/f/ERQD2x',
         meta: { title: '定制化源', icon: 'link' }
       }
     ]

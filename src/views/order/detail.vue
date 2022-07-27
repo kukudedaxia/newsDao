@@ -7,7 +7,7 @@
           <el-descriptions-item label="群名称">{{ info.name }}</el-descriptions-item>
           <el-descriptions-item label="创建时间">{{ info.created_at }}</el-descriptions-item>
           <el-descriptions-item label="描述">{{ info.description }}</el-descriptions-item>
-          <el-descriptions-item label="群成员">{{ info.member_count }}</el-descriptions-item>
+          <el-descriptions-item label="群成员数量">{{ info.member_count }}</el-descriptions-item>
           <el-descriptions-item label="receiver">{{ info.receiver }}</el-descriptions-item>
           <!-- <el-descriptions-item label="机器人">
 
