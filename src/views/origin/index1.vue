@@ -9,6 +9,7 @@
             <el-radio-button v-for="(item,index) in types" :key="index" :label="item.value">{{ item.name }}</el-radio-button>
           </el-radio-group>
           <span class="tip">切换过滤时不保留上次已选择源!</span>
+          <a class="link" href="https://jinshuju.net/f/ERQD2x" target="_blank">没有我想要的源？</a>
         </div>
       </h3>
       <el-table
@@ -246,6 +247,7 @@ export default {
 .head {
   display: flex;
     align-items: center;
+    width: 100%;
     span {
       margin-right: 16px;
     }
@@ -254,6 +256,11 @@ export default {
   font-size: 14px;
   color: orange;
   margin-left: 20px;
+}
+.link {
+  margin-left: auto;
+  color: #03a9f4;
+  font-size: 14px;
 }
 </style>
 

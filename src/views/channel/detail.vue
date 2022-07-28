@@ -231,6 +231,20 @@ export default {
 .content {
   padding: 20px;
 }
+.avator {
+  display: flex;
+  align-items: center;
+  img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+}
+.tag-item {
+  margin-right: 4px;
+  margin-top: 4px;
+}
 </style>
 <style lang="scss">
 .origin-dialog {

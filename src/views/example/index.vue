@@ -123,7 +123,6 @@ export default {
      img {
        width: 40px;
        margin-right: 10px;
-           border: 1px solid #ddd;
      }
      .small {
         width: 30px;
