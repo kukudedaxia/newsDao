@@ -2,11 +2,11 @@
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" src="https://img.bee-cdn.com/large/3b9ae203lz1h3xg5nzxnjj205k05kq3a.jpg" class="sidebar-logo">
+        <img v-if="logo" :src="require('../../../assets/images/logo.png')" class="sidebar-logo">
         <h1 v-else class="sidebar-title">{{ title }} </h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img src="https://img.bee-cdn.com/large/3b9ae203lz1h3xg5nzxnjj205k05kq3a.jpg" class="sidebar-logo">
+        <img :src="require('../../../assets/images/logo.png')" class="sidebar-logo">
         <h1 class="sidebar-title">{{ title }} </h1>
       </router-link>
     </transition>

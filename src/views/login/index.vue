@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="step == 1 ? loginRules : loginRules1" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm" :rules="step == 1 ? loginRules : register ? loginRules1 : loginRules2" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
         <h3 class="title">Login NewsDao</h3>
@@ -13,7 +13,7 @@
         <el-input
           ref="email"
           v-model="loginForm.email"
-          placeholder="Username"
+          placeholder="Email"
           name="email"
           type="text"
           tabindex="1"
@@ -48,6 +48,7 @@
           placeholder="请输入验证码"
           type="text"
           auto-complete="on"
+          maxlength="6"
         />
         <template v-if="!codeLoading">
           <p v-if="!codeTimes" :class="['send-times']" @click=" sendCode()">
@@ -62,8 +63,8 @@
         <el-input
           ref="code"
           v-model="loginForm.code"
-          placeholder="请输入Wx_code"
-          name="code"
+          placeholder="请输入wx_code"
+          name="wx_code"
           type="text"
           tabindex="1"
           auto-complete="on"
@@ -75,6 +76,7 @@
 
       <div class="tips">
         <span v-if="step == 1" style="margin-right:20px;">step1: 请选输入邮箱账号</span>
+        <span v-show="step == 2 && !register" class="wx_tip">注意：请添加微信 WEILAI_PxB并发送 /code 获取wx_code !</span>
         <span v-if="step == 2 && register == false" style="margin-right:20px;">step2: 登录即为注册成功</span>
       </div>
 
@@ -110,7 +112,7 @@ export default {
     }
     return {
       loginForm: {
-        email: 'lengh123456@gmail.com',
+        email: '',
         password: '',
         code: '',
         verification_code: '',
@@ -122,6 +124,12 @@ export default {
       loginRules1: {
         email: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+      },
+      loginRules2: {
+        email: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        verification_code: [{ required: true, trigger: 'blur' }],
+        code: [{ required: true, trigger: 'blur' }]
       },
       loading: false,
       passwordType: 'password',
@@ -211,8 +219,12 @@ export default {
             this.$store.dispatch('user/login', this.loginForm).then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
-            }).catch(() => {
+            }).catch((err) => {
               this.loading = false
+              this.$message({
+                type: 'info',
+                message: err
+              })
             })
           } else {
             console.log('error submit!!')
@@ -320,6 +332,7 @@ $light_gray:#eee;
     padding: 160px 35px 0;
     margin: 0 auto;
     overflow: hidden;
+    margin-bottom: 100px;
   }
 
   .tips {
@@ -374,6 +387,11 @@ $light_gray:#eee;
 .times {
    margin-left: 10px;
    color: #03a9f4;
+}
+.wx_tip {
+  color: #ffc107;
+    display: flex;
+    margin-bottom: 10px;
 }
 </style>
 <style lang="scss">

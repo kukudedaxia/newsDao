@@ -34,6 +34,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       login(userInfo).then(response => {
         console.log(response, 'response')
+        if (response.status === false || response.code === 404) {
+          reject(response.message)
+        }
         // const { data } = response
         commit('SET_TOKEN', response.access_token)
         commit('SET_NAME', userInfo.email)
