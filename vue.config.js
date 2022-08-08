@@ -39,7 +39,7 @@ module.exports = {
     proxy: {
       '/api': {
         changeOrigin: true,
-        target: 'http://81.68.251.185/'
+        target: 'https://bcaca.xyz/'
       }
     },
     overlay: {

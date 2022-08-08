@@ -27,6 +27,7 @@
           v-model="value"
           style="text-align: left; display: inline-block"
           filterable
+          :filter-method="filterMethod"
           :left-default-checked="leftcheck"
           :right-default-checked="[6]"
           :titles="['未订阅列表', '已订阅列表']"
@@ -38,7 +39,9 @@
           :data="channels"
           @change="handleChange"
         >
-          <span slot-scope="{ option }">{{ option.name }}</span>
+          <span slot-scope="{ option }">{{ option.name }}
+            <span v-if="option.is_owner" class="custom">自创</span>
+          </span>
           <!-- <el-button slot="left-footer" class="transfer-footer" size="small">操作</el-button>
           <el-button slot="right-footer" class="transfer-footer" size="small">操作</el-button> -->
         </el-transfer>
@@ -64,7 +67,11 @@ export default {
       rightcheck: ['6'],
       saveLoding: false,
       loading1: true,
-      loading2: true
+      loading2: true,
+      filterMethod(query, item) {
+        console.log(query, 1)
+        return item.name.indexOf(query) > -1
+      }
     }
   },
   computed: {
@@ -104,6 +111,7 @@ export default {
           item.lable = item.name
           return item
         })
+        this.channels = this.channels.sort((a, b) => { a.grade - b.grade })
         this.loading2 = false
       })
     },
@@ -128,9 +136,22 @@ export default {
         this.saveLoding = false
       })
     }
+
   }
 }
 </script>
+<style lang="scss">
+.detail .el-transfer-panel__list {
+    height: 244px;
+}
+.detail .el-transfer-panel__body {
+  height: 300px;
+}
+.el-checkbox:last-of-type  {
+ margin-right: 30px;
+}
+
+</style>
 <style lang="scss" scoped>
 .detail {
   padding: 20px;
@@ -181,5 +202,20 @@ export default {
 .save {
   margin-top: 40px;
   width: 200px;
+}
+.custom {
+font-size: 12px;
+    padding: 2px 6px;
+    line-height: 14px;
+    background: linear-gradient(270deg,#2196f3,#3f51b5);
+    color: #fff;
+    border-radius: 4px;
+    margin-left: 10px;
+    margin-bottom: 4px;
+    display: inline-block;
+    transform: scale(.8);
+    position: absolute;
+    right: -30px;
+    top: 6px;
 }
 </style>

@@ -80,7 +80,7 @@ export const constantRoutes = [
         name: 'detail',
         component: () => import('@/views/order/detail'),
         meta: { title: '编辑群', icon: 'peoples', dashboard: {
-          path: '/order/list',
+          path: '/order',
           title: '群管理'
         }}
       }
