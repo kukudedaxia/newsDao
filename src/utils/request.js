@@ -59,9 +59,9 @@ service.interceptors.response.use(
     //   // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
     if (res.status_code === 401) {
       // to re-login
-      MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-        confirmButtonText: 'Re-Login',
-        cancelButtonText: 'Cancel',
+      MessageBox.confirm('您的登录已过期，请重新登录', 'Confirm logout', {
+        confirmButtonText: '重登',
+        cancelButtonText: '返回',
         type: 'warning'
       }).then(() => {
         store.dispatch('user/resetToken').then(() => {
@@ -75,17 +75,20 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
-    if (error.response.status === 401 || error.response.status === 500) {
-      MessageBox.confirm('You Token has expired, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-        confirmButtonText: 'Re-Login',
-        cancelButtonText: 'Cancel',
+    if (error.response.status === 401) {
+      MessageBox.confirm('您的登录已过期，请重新登录', 'Confirm logout', {
+        confirmButtonText: '重登',
+        cancelButtonText: '返回',
         type: 'warning'
       }).then(() => {
         store.dispatch('user/resetToken').then(() => {
           location.reload()
         })
       })
-      return Promise.reject(new Error(error.response.message || 'Error'))
+      return Promise.reject(new Error(error.response.data.message || 'Error'))
+    }
+    if (error.response.status === 402) {
+      return Promise.reject('密码错误，请确认后输入')
     }
     Message({
       message: error.message,

@@ -13,7 +13,12 @@
         mode="vertical"
       >
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
-      </el-menu>
+        <div class="hidden-sm-and-up">
+          <el-menu-item @click="logout">
+            <svg-icon icon-class="exit" />
+            <span slot="title">退出登录</span>
+          </el-menu-item>
+        </div></el-menu>
     </el-scrollbar>
   </div>
 </template>
@@ -51,6 +56,19 @@ export default {
     isCollapse() {
       return !this.sidebar.opened
     }
+  },
+  methods: {
+    async logout() {
+      await this.$store.dispatch('user/logout')
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    }
   }
 }
 </script>
+<style lang="scss" scoped>
+@media screen and (min-width: 721px) {
+  .hidden-sm-and-up {
+    display: none;
+  }
+}
+</style>

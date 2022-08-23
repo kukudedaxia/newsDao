@@ -45,7 +45,7 @@
       <el-form-item v-show="step == 2 && !register" class="input-box flex-align verfiy" prop="verification_code">
         <el-input
           v-model="loginForm.verification_code"
-          placeholder="请输入验证码"
+          placeholder="请输入邮箱验证码"
           type="text"
           auto-complete="on"
           maxlength="6"
@@ -78,6 +78,7 @@
         <span v-if="step == 1" style="margin-right:20px;">step1: 请选输入邮箱账号</span>
         <span v-show="step == 2 && !register" class="wx_tip">注意：请添加微信 WEILAI_PxB并发送 /code 获取wx_code !</span>
         <span v-if="step == 2 && register == false" style="margin-right:20px;">step2: 登录即为注册成功</span>
+        <span v-if="step == 1 || step == 2" style="margin-right:20px;"><br>发生问题清联系客服微信：richyour001</span>
       </div>
 
     </el-form>
@@ -200,11 +201,6 @@ export default {
               this.$nextTick(() => {
                 this.$refs.loginForm.clearValidate()
               })
-            }).catch((err) => {
-              this.$message({
-                type: 'info',
-                message: err
-              })
             })
           } else {
             console.log('error submit!!')
@@ -216,6 +212,7 @@ export default {
           console.log(valid, 'valid')
           if (valid) {
             this.loading = true
+            this.loginForm.verification_key = this.loginForm.verification_key || localStorage.getItem('verification_key')
             this.$store.dispatch('user/login', this.loginForm).then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
@@ -244,6 +241,7 @@ export default {
       }).then(res => {
         this.codeLoading = false
         this.loginForm.verification_key = res.key
+        localStorage.setItem('verification_key', res.key)
         this.countDown()
       })
     },
