@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="step == 1 ? loginRules : register ? loginRules1 : loginRules2" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login NewsDao</h3>
+        <h3 class="title">Login Bcaca</h3>
       </div>
 
       <el-form-item prop="email">
@@ -74,11 +74,12 @@
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ step == 1 ? 'NEXT' : "LOGIN" }}</el-button>
       <el-button v-if="step == 2" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="back">返回账号输入</el-button>
 
+      <a href="https://service.bcaca.xyz/password/reset" target="_blank" class="forget">忘记/重置 密码</a>
       <div class="tips">
         <span v-if="step == 1" style="margin-right:20px;">step1: 请选输入邮箱账号</span>
         <span v-show="step == 2 && !register" class="wx_tip">注意：请添加微信 WEILAI_PxB并发送 /code 获取wx_code !</span>
         <span v-if="step == 2 && register == false" style="margin-right:20px;">step2: 登录即为注册成功</span>
-        <span v-if="step == 1 || step == 2" style="margin-right:20px;"><br>发生问题清联系客服微信：richyour001</span>
+        <span v-if="step == 1 || step == 2" style="margin-right:20px;"><br>发生问题请联系客服微信：richyour001</span>
       </div>
 
     </el-form>
@@ -409,5 +410,17 @@ $light_gray:#eee;
 }
 .svg-icon {
   vertical-align: sub;
+}
+.forget {
+    color: #3f9eff;
+    font-size: 14px;
+    margin-bottom: 10px;
+    /* display: inline-block; */
+    position: relative;
+    top: -10px;
+    &:hover {
+       color: #3f9eff;
+       opacity: .9;
+    }
 }
 </style>

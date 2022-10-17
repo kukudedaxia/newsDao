@@ -23,13 +23,14 @@
     <div class="middle top">
       <h3>频道管理</h3>
       <div class="flex">
-        <el-transfer
+        <transfer
           v-model="value"
           style="text-align: left; display: inline-block"
           filterable
+          :filter-method1="filterMethod1"
           :filter-method="filterMethod"
           :left-default-checked="leftcheck"
-          :right-default-checked="[6]"
+          :right-default-checked="rightcheck"
           :titles="['未订阅列表', '已订阅列表']"
           :button-texts="['取消', '订阅']"
           :format="{
@@ -44,7 +45,7 @@
           </span>
           <!-- <el-button slot="left-footer" class="transfer-footer" size="small">操作</el-button>
           <el-button slot="right-footer" class="transfer-footer" size="small">操作</el-button> -->
-        </el-transfer>
+        </transfer>
         <el-button type="primary" class="save" :loading="saveLoding" @click="save">保存</el-button>
       </div>
       <div class="info" />
@@ -53,8 +54,12 @@
 </template>
 <script>
 import request from '@/utils/request'
+import transfer from './transfer/src/main.vue'
 export default {
   name: 'OrderDetail',
+  components: {
+    transfer
+  },
   data() {
     return {
       title: '123',
@@ -64,12 +69,14 @@ export default {
       channels: [],
       value: [],
       leftcheck: [],
-      rightcheck: ['6'],
+      rightcheck: [],
       saveLoding: false,
       loading1: true,
       loading2: true,
+      filterMethod1(query, item) {
+        return item.name.indexOf(query) > -1 && item.id !== 14
+      },
       filterMethod(query, item) {
-        console.log(query, 1)
         return item.name.indexOf(query) > -1
       }
     }
@@ -92,7 +99,7 @@ export default {
       }).then(res => {
         console.log(res, '群姑那里list')
         this.info = res.data
-        this.value = res.data.channels.data.map(item => item.id)
+        this.value = [...res.data.channels.data.map(item => item.id)]
         this.loading1 = false
       })
     },
@@ -117,6 +124,9 @@ export default {
     },
     handleChange(value, direction, movedKeys) {
       console.log(value, direction, movedKeys)
+      if (direction === 'left') {
+        this.channels.shift()
+      }
     },
     save() {
       this.saveLoding = true

@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'News Dao' // page title
+const name = defaultSettings.title || 'Bcaca' // page title
 
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
@@ -39,7 +39,7 @@ module.exports = {
     proxy: {
       '/api': {
         changeOrigin: true,
-        target: 'https://www.bcaca.xyz/'
+        target: 'https://bcaca.xyz/'
       }
     },
     overlay: {
@@ -97,7 +97,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()

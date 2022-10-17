@@ -6,7 +6,7 @@
         <div class="head">
           <span>源列表</span>
           <el-radio-group v-model="defaults" size="small" @change="filter">
-            <el-radio-button v-for="(item,index) in types" :key="index" :label="item.value">{{ item.name }}</el-radio-button>
+            <el-radio-button v-for="(item,index) in types" :key="index" :label="item.value" :disabled="item.disable">{{ item.name }}</el-radio-button>
           </el-radio-group>
           <span class="tip">切换过滤时不保留上次已选择源!</span>
           <a class="link" href="https://jinshuju.net/f/ERQD2x" target="_blank">没有我想要的源？</a>
@@ -129,10 +129,12 @@ export default {
         value: 'twitter.list'
       }, {
         name: 'Discord',
-        value: 'dc'
+        value: 'dc',
+        disable: true
       }, {
         name: '财经媒体',
-        value: 'media.live'
+        value: 'media.live',
+        disable: true
       }],
       multipleSelection: []
     }

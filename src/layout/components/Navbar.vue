@@ -23,8 +23,11 @@
           <a target="_blank" href="https://t.me/news_dao">
             <el-dropdown-item>Telegram</el-dropdown-item>
           </a>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+          <a href="https://service.bcaca.xyz/password/reset" target="_blank">
+            <el-dropdown-item divided>忘记/重置 密码</el-dropdown-item>
+          </a>
+          <el-dropdown-item @click.native="logout">
+            <span style="display:block;">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>

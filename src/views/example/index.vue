@@ -19,7 +19,7 @@
         <div class="text flex"><span>1.加主机器人为微信好友（必要条件）：WEILAI_PxB</span><img class="jpg2" :src="require('./image/1.png')"></div>
         <div class="text flex"><span>2.添加备用机器人为微信好友（非必要条件）：richyour001</span><img class="jpg2" :src="require('./image/2.png')"></div>
         <div class="text">3.将（主机器人）拉入您想要获取信息的群聊内，（主机器人）将自动同意进群。</div>
-        <div class="text">4.使用浏览器打开管理界面 <a href="https://bcaca.xyz/user-center" target="_blank">https://bcaca.xyz/user-center</a> ，然后填入邮箱进行注册。（此处需填入wx_code,给机器人发送 /code 即可获取这段密码）</div>
+        <div class="text">4.使用浏览器打开管理界面 <a href="https://www.bcaca.xyz/user-center" target="_blank">https://www.bcaca.xyz/user-center</a> ，然后填入邮箱进行注册。（此处需填入wx_code,给机器人发送 /code 即可获取这段密码）</div>
         <div class="line">  <el-image
           class="jpg3"
           :src="require('./image/15.png')"
@@ -45,11 +45,11 @@
           :src="require('./image/5.png')"
           :preview-src-list="[require('./image/5.png')]"
         /></div>
-        <div class="text">7.进入编辑选项之后，我们可以看到频道管理，这里可以订阅您自己创建的频道，由于您还未创建任何频道所以这里的频道是空的，这个时候我们需要先点击左侧栏的（定制频道）按钮，创建频道。<span class="tip">【小提示：频道可以理解为您订阅的（消息源/作者）的一个小组，您最多可以创建10个频道，每个频道内包含不同的（消息源/作者）】</span></div>
+        <div class="text">7.进入编辑选项之后，我们可以看到频道管理，这里可以订阅您自己创建的频道，由于您还未创建任何频道，所以这里的频道都是我們已经创建好的公共頻道。如果您想创建属于自己的频道，这个时候我们需要先点击左侧栏的（定制频道）按钮，创建频道。</div>
         <div class="line"><el-image
           class="jpg5"
-          :src="require('./image/6.png')"
-          :preview-src-list="[require('./image/6.png')]"
+          :src="require('./image/6.jpg')"
+          :preview-src-list="[require('./image/6.jpg')]"
         /></div>
         <div class="text">8.点击（定制频道）按钮之后，点击（新建）按钮。</div>
         <div class="line"><el-image

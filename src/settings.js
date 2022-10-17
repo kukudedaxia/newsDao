@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'News Dao',
+  title: 'Bcaca',
 
   /**
    * @type {boolean} true | false
